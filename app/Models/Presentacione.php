@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Presentacione extends Model
 {
     use HasFactory;
+
+    public function productos()
+    {
+        return $this->belongsToMany(Producto::class);
+    }
+
+    public function caracteristica()
+    {
+        return $this->belongsTo(Caracteristica::class);
+    }
 }

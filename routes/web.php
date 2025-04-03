@@ -17,6 +17,13 @@ Route::get('/', function () {
     return view('template');
 });
 
+Route::view('/panel','panel.index')->name('panel');
+
+//panel
+Route::get('/', function () {
+    return view('template');
+});
+//login
 Route::get('/login', function () {
     return view('auth.login');
 });

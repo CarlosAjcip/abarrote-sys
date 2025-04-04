@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\categoriaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,3 +39,7 @@ Route::get('/404', function () {
 Route::get('/500', function () {
     return view('pages.500');
 });
+
+//moduloo de categorias
+// Route::view('/categorias','categorias.index')->name('categoria');
+Route::resource('categoria', categoriaController::class);

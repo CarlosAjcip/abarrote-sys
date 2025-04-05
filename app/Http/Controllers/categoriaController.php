@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use App\Models\Caracteristica;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,9 @@ class categoriaController extends Controller
      */
     public function index()
     {
-        return view('categorias.index');
+        $categorias = Categoria::with('caracteristica')->get();
+
+        return view('categorias.index',  ['categorias' => $categorias]);
     }
 
     /**

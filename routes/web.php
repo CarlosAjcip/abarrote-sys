@@ -42,4 +42,11 @@ Route::get('/500', function () {
 
 //moduloo de categorias
 // Route::view('/categorias','categorias.index')->name('categoria');
-Route::resource('categoria', categoriaController::class);
+/*Por si se genera un error en otros posibles proyectos cuando se crea el controlador con --resource
+y solo tenemos esta ruta lo podemos corregir con esto
+Route::resource('categoria', categoriaController::class);*/
+
+Route::resource('categoria', CategoriaController::class)->parameters([
+    'categoria' => 'categoria'
+]);
+

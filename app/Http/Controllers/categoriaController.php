@@ -18,7 +18,7 @@ class categoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::with('caracteristica')->get();
+        $categorias = Categoria::with('caracteristica')->latest()->get();
 
         return view('categorias.index',  ['categorias' => $categorias]);
     }
@@ -43,16 +43,16 @@ class categoriaController extends Controller
     {
         try {
             DB::beginTransaction();
-                $caracteristicas = Caracteristica::create($request->validated());
-                $caracteristicas->categoria()->create([
-                    'caracteristica_id' => $caracteristicas->id
-                ]);
+            $caracteristicas = Caracteristica::create($request->validated());
+            $caracteristicas->categoria()->create([
+                'caracteristica_id' => $caracteristicas->id
+            ]);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
         }
 
-        return redirect()->route('categoria.index')->with('success','Categoria registrada');
+        return redirect()->route('categoria.index')->with('success', 'Categoria registrada');
     }
 
     /**
@@ -87,8 +87,8 @@ class categoriaController extends Controller
     public function update(UpdateCategoriaRequest $request, Categoria $categoria)
     {
         Caracteristica::where('id', $categoria->caracteristica->id)->update($request->validated());
-        
-        return redirect()->route('categoria.index')->with('success','Categoria Editada');
+
+        return redirect()->route('categoria.index')->with('success', 'Categoria Editada');
     }
 
     /**
@@ -99,6 +99,27 @@ class categoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $menssage = '';
+        $categoria = Categoria::find($id);
+
+        if ($categoria->caracteristica->estado == 1) {
+            Caracteristica::where('id', $categoria->caracteristica->id)
+                ->update(
+                    [
+                        'estado' => 0
+                    ]
+                );
+                $menssage = 'Categoria Eliminda';
+        } else {
+            Caracteristica::where('id', $categoria->caracteristica->id)
+                ->update(
+                    [
+                        'estado' => 1
+                    ]
+                );
+                $menssage = 'Categoria Restaurada';
+        }
+
+        return redirect()->route('categoria.index')->with('success', $menssage);
     }
 }

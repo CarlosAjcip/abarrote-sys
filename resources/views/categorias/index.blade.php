@@ -98,7 +98,7 @@
         </div>
         <div class="modal-body">
             {{ $categoria->caracteristica->estado == 1 
-                ? "!¿Seguro que quieres eliminar la categoría? {$categoria->id}" 
+                ? "!¿Seguro que quieres eliminar la categoría? " 
                 : "¿Quieres restaurar la categoría?" 
             }}
             

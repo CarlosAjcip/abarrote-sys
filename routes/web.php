@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\categoriaController;
+use App\Http\Controllers\marcaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,3 +51,7 @@ Route::resource('categoria', CategoriaController::class)->parameters([
     'categoria' => 'categoria'
 ]);
 
+//modulo marcas
+Route::resource('marca', marcaController::class)->parameters([
+    'marca' => 'marca'
+]);

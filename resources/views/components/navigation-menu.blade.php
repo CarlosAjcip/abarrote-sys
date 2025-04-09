@@ -52,8 +52,12 @@
                 </div> --}}
                 <div class="sb-sidenav-menu-heading">Modulos</div>
                 <a class="nav-link" href="{{route('categoria.index')}}">
-                    <div class="sb-nav-link-icon"><i class="fa-solid fa-tags"></i></div>
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                     Categorias
+                </a>
+                <a class="nav-link" href="{{route('marca.index')}}">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-tags"></i></div>
+                    Marcas
                 </a>
                 <a class="nav-link" href="#">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>

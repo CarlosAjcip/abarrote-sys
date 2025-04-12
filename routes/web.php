@@ -3,6 +3,7 @@
 use App\Http\Controllers\categoriaController;
 use App\Http\Controllers\marcaController;
 use App\Http\Controllers\presentacionesController;
+use App\Http\Controllers\productoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,4 +61,9 @@ Route::resource('marca', marcaController::class)->parameters([
 //modulo presentaciones
 Route::resource('presentaciones', presentacionesController::class)->parameters([
     'presentaciones' => 'presentaciones'
+]);
+
+//modulo productos
+Route::resource('producto', productoController::class)->parameters([
+    'producto' => 'producto'
 ]);

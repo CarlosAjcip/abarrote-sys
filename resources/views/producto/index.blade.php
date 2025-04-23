@@ -92,8 +92,8 @@
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
-                                <form method="get" action="{{route('presentaciones.edit',['presentaciones'=>$item])}}">
-                                    @csrf
+                                <form action="{{route('producto.edit',['producto'=>$item])}}">
+                                 
                                     <button type="submit" class="btn btn-warning">Editar</button>
                                 </form>
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#verModal-{{$item->id}}">Ver</button>

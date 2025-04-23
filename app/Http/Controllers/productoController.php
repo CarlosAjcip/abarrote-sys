@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\Presentacione;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SotreProductoRequest;
+use App\Http\Requests\UpdateProductoRequest;
+use Illuminate\Support\Facades\Storage;
 
 class productoController extends Controller
 {
@@ -131,9 +133,25 @@ class productoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Producto $producto)
     {
-        //
+        $marcas = Marca::join('caracteristicas as c', 'marcas.caracteristica_id', '=', 'c.id')
+        ->select('marcas.id as id', 'c.nombre as nombre')
+        ->where('c.estado',1)
+        ->get();
+
+      
+
+        $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
+        ->select('categorias.id as id', 'c.nombre as nombre')
+        ->where('c.estado',1)
+        ->get();
+
+        $presentaciones = Presentacion::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
+        ->select('presentaciones.id as id', 'c.nombre as nombre')
+        ->where('c.estado',1)
+        ->get();
+       return view('producto.edit', compact('producto','marcas','categorias','presentaciones'));
     }
 
     /**
@@ -143,9 +161,53 @@ class productoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductoRequest $request, Producto $producto)
     {
-        //
+        try {
+            //code...
+            DB::beginTransaction();
+
+
+                if ($request->hasFile('img_path')) {
+                    # code...
+                    $name = $producto->handleUploadImage($request->file('img_path'));
+
+                    if (Storage::disk('public')->exists('productos/' . $producto->img_path)) {
+                        # code...
+                        Storage::disk('public')->delete('productos/' . $producto->img_path);
+                    }
+
+                }else{
+                    $name = $producto->img_path;
+                }
+                
+                $producto->fill([
+                    'codigo' => $request->codigo,
+                    'nombre' => $request->nombre,
+                    'descripcion' => $request->descripcion,
+                    'fecha_vencimiento' => $request->fecha_vencimiento,
+                    'img_path' => $name,
+                    'marca_id' => $request->marca_id,
+                   'presentacion_id' => $request->presentacion_id
+
+                ]);
+                
+
+                $producto->save();
+
+                //tabla categoria producto
+                $categorias = $request->get('categorias');
+                $producto->categorias()->sync($categorias);
+
+                
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+            DB::rollBack();
+        }
+
+        return redirect()->route('producto.index')->with('success','Producto editado');
     }
 
     /**

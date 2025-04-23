@@ -63,6 +63,10 @@
                     <div class="sb-nav-link-icon"><i class="fa-regular fa-file"></i></i></div>
                     Presentaciones
                 </a>
+                <a class="nav-link" href="{{route('producto.index')}}">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-store"></i></div>
+                    Productos
+                </a>
                 <a class="nav-link" href="#">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                     Tables

@@ -105,15 +105,15 @@
                                 @else
                                 <button type="button" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal-{{$item->id}}"
-                                    class="btn btn-success">Restaurar</button>
+                                    class="btn btn-primary">Restaurar</button>
                                 @endif
 
                             </div>
                         </td>
                     </tr>
 
-                    <!-- Modal -->
-                    {{-- <div class="modal fade" id="exampleModal-{{$item->id}}" tabindex="-1"
+                    <!-- Modal Eliminar-->
+                    <div class="modal fade" id="exampleModal-{{$item->id}}" tabindex="-1"
                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -123,9 +123,9 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    {{ $presentaciones->caracteristica->estado == 1
-                                    ? "!¿Seguro que quieres eliminar la presentacion?"
-                                    : "¿Quieres restaurar la presentacion?"
+                                    {{ $item->estado == 1
+                                    ? "!¿Seguro que quieres eliminar el producto?"
+                                    : "¿Quieres restaurar el producto?"
                                     }}
 
                                 </div>
@@ -133,7 +133,7 @@
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Cerrar</button>
                                     <form method="post"
-                                        action="{{route('presentaciones.destroy',['presentaciones'=>$item->id])}}">
+                                        action="{{route('producto.destroy',['producto'=>$item->id])}}">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-danger">Confirmar</button>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
 
                     <!-- Modal de ver la imagne-->
                     <div class="modal fade" id="verModal-{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel"

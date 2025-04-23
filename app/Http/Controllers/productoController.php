@@ -58,12 +58,12 @@ class productoController extends Controller
         ->where('c.estado',1)
         ->get();
 
-        $presentaciones = Presentacion::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
-        ->select('presentaciones.id as id', 'c.nombre as nombre')
+        $producto = Presentacion::join('caracteristicas as c', 'producto.caracteristica_id', '=', 'c.id')
+        ->select('producto.id as id', 'c.nombre as nombre')
         ->where('c.estado',1)
         ->get();
 
-        return view('producto.create', compact('marcas','presentaciones','categorias'));
+        return view('producto.create', compact('marcas','producto','categorias'));
     }
 
     /**
@@ -147,11 +147,11 @@ class productoController extends Controller
         ->where('c.estado',1)
         ->get();
 
-        $presentaciones = Presentacion::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
-        ->select('presentaciones.id as id', 'c.nombre as nombre')
+        $producto = Presentacion::join('caracteristicas as c', 'producto.caracteristica_id', '=', 'c.id')
+        ->select('producto.id as id', 'c.nombre as nombre')
         ->where('c.estado',1)
         ->get();
-       return view('producto.edit', compact('producto','marcas','categorias','presentaciones'));
+       return view('producto.edit', compact('producto','marcas','categorias','producto'));
     }
 
     /**
@@ -218,6 +218,27 @@ class productoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $message = '';
+        $producto = Producto::find($id);
+
+        if ($producto->estado == 1) {
+            # code...
+            Producto::where('id',$producto->id)
+            ->update([
+                'estado' => 0
+            ]);
+
+            $message = 'Producto Eliminado';
+        } else {
+            # code...
+            Producto::where('id',$producto->id)
+            ->update([
+                'estado' => 1
+            ]);
+
+            $message = 'Producto Restaurado';
+        }
+        
+        return redirect()->route('producto.index')->with('success', $message);
     }
 }

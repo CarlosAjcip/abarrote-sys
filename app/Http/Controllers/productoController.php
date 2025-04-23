@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Marca;
+use App\Models\Producto;
+use App\Models\Categoria;
+use App\Models\Presentacion;
 use Illuminate\Http\Request;
+use App\Models\Presentacione;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\SotreProductoRequest;
 
 class productoController extends Controller
 {
@@ -13,7 +20,9 @@ class productoController extends Controller
      */
     public function index()
     {
-        //
+        $productos = Producto::with(['categorias.caracteristica','marca.caracteristica','presentacion.caracteristica'])->get();
+  
+        return view('producto.index', compact('productos'));
     }
 
     /**
@@ -23,7 +32,36 @@ class productoController extends Controller
      */
     public function create()
     {
-        //
+        //otra forma de hacer una consulta siempre en el paradigma eloquent
+        // $marcas = Marca::whereHas('caracteristica', function ($query) {
+        //     $query->where('estado', 1);
+        // })->get();
+
+        // dd($marcas);
+        
+        // $categorias = Categoria::whereHas('caracteristica', function ($query) {
+        //     $query->where('estado', 1);
+        // })->get();
+
+        //y esta es otro forma
+        $marcas = Marca::join('caracteristicas as c', 'marcas.caracteristica_id', '=', 'c.id')
+        ->select('marcas.id as id', 'c.nombre as nombre')
+        ->where('c.estado',1)
+        ->get();
+
+      
+
+        $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
+        ->select('categorias.id as id', 'c.nombre as nombre')
+        ->where('c.estado',1)
+        ->get();
+
+        $presentaciones = Presentacion::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
+        ->select('presentaciones.id as id', 'c.nombre as nombre')
+        ->where('c.estado',1)
+        ->get();
+
+        return view('producto.create', compact('marcas','presentaciones','categorias'));
     }
 
     /**
@@ -32,9 +70,48 @@ class productoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SotreProductoRequest $request)
     {
-        //
+        try {
+            //code...
+            DB::beginTransaction();
+
+                $producto = new Producto();
+
+                if ($request->hasFile('img_path')) {
+                    # code...
+                    $name = $producto->handleUploadImage($request->file('img_path'));
+                }else{
+                    $name = null;
+                }
+                
+                $producto->fill([
+                    'codigo' => $request->codigo,
+                    'nombre' => $request->nombre,
+                    'descripcion' => $request->descripcion,
+                    'fecha_vencimiento' => $request->fecha_vencimiento,
+                    'img_path' => $name,
+                    'marca_id' => $request->marca_id,
+                   'presentacion_id' => $request->presentacion_id
+
+                ]);
+                
+
+                $producto->save();
+
+                //tabla categoria producto
+                $categorias = $request->get('categorias');
+                $producto->categorias()->attach($categorias);
+
+                
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+            DB::rollBack();
+        }
+
+        return redirect()->route('producto.index')->with('success','Producto Registrado');
     }
 
     /**

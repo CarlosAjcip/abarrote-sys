@@ -32,8 +32,8 @@ class Producto extends Model
         return $this->belongsTo(Marca::class);
     }
 
-    public function presentacione(){
-        return $this->belongsTo(Presentacione::class);
+    public function presentacion(){
+        return $this->belongsTo(Presentacion::class);
     }
 
     protected $fillable = ['codigo','nombre','descripcion','fecha_vencimiento','marca_id','presentacion_id','img_path'];

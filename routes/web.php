@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\categoriaController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\marcaController;
 use App\Http\Controllers\presentacionesController;
 use App\Http\Controllers\productoController;
@@ -66,4 +67,9 @@ Route::resource('presentaciones', presentacionesController::class)->parameters([
 //modulo productos
 Route::resource('producto', productoController::class)->parameters([
     'producto' => 'producto'
+]);
+
+//modulo clientes
+Route::resource('cliente', ClienteController::class)->parameters([
+    'cliente' => 'cliente'
 ]);

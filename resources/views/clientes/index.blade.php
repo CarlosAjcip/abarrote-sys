@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('titl','Clientes')
+@section('title','Clientes')
 
 @push('css')
 <script src="tthps://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -10,24 +10,24 @@
 @section('content')
 
 @if (session('success'))
-<script>
-    let message = "{{session('success')}}"
-                const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-            });
-            Toast.fire({
-            icon: "success",
-            title: message
-            });
-</script>
+    <script>
+        let message = "{{session('success')}}"
+            const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+        });
+        Toast.fire({
+        icon: "success",
+        title: message
+        });
+    </script>
 @endif
 
 <div class="container-fluid px-4">
@@ -51,38 +51,26 @@
             <table id="datatablesSimple" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Codigo</th>
                         <th>Nombre</th>
-                        <th>Marca</th>
-                        <th>Presentacion</th>
-                        <th>Categorias</th>
-                        <th>Acciones</th>
+                        <th>Direccion</th>
+                        <th>Documento</th>
+                        <th>Tipo de persona</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($productos as $item)
+                    @foreach ($clientes as $item)
                     <tr>
-                        <td>{{$item->codigo}}</td>
-                        <td>{{$item->nombre}}</td>
+                        <td>{{$item->persona->razon_social}}</td>
+                        <td>{{$item->persona->direccion}}</td>
                         <td>
-                            {{$item->marca->caracteristica->nombre}}
+                            <p class="fw-normal mb-1">{{$item->persona->documento->tipo_documento}}</p>
+                            <p class="text-muted mb-0">{{$item->persona->numero_documento}}</p>
                         </td>
+                        <td>{{$item->persona->tipo_persona}}</td>
                         <td>
-                            {{$item->presentacion->caracteristica->nombre}}
-                        </td>
-                        <td>
-                            @foreach ($item->categorias as $category)
-                            <div class="container">
-                                <div class="row">
-                                    <span class="m-1 rounded-pill p-1 bg-secondary text-white text-center">
-                                        {{$category->caracteristica->nombre}}</span>
-                                </div>
-                            </div>
-                            @endforeach
-                        </td>
-                        <td>
-                            @if ($item->estado == 1)
+                            @if ($item->persona->estado == 1)
                             <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
                             @else
                             <span class="fw-bolder p-1 rounded bg-danger text-white">Eliminado</span>
@@ -91,20 +79,19 @@
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
-                                <form action="{{route('producto.edit',['producto'=>$item])}}">
-                                 
+                                <form action="{{route('cliente.edit',['cliente'=>$item])}}">
+
                                     <button type="submit" class="btn btn-warning">Editar</button>
                                 </form>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#verModal-{{$item->id}}">Ver</button>
 
-                                @if ($item->estado == 1)
+                                @if ($item->persona->estado == 1)
                                 <button type="button" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal-{{$item->id}}"
                                     class="btn btn-danger">Eliminar</button>
                                 @else
                                 <button type="button" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal-{{$item->id}}"
-                                    class="btn btn-primary">Restaurar</button>
+                                    class="btn btn-success">Restaurar</button>
                                 @endif
 
                             </div>
@@ -122,9 +109,9 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    {{ $item->estado == 1
-                                    ? "!¿Seguro que quieres eliminar el producto?"
-                                    : "¿Quieres restaurar el producto?"
+                                    {{ $item->persona->estado == 1
+                                    ? "!¿Seguro que quieres eliminar el cliente?"
+                                    : "¿Quieres restaurar el cliente?"
                                     }}
 
                                 </div>
@@ -132,7 +119,7 @@
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Cerrar</button>
                                     <form method="post"
-                                        action="{{route('producto.destroy',['producto'=>$item->id])}}">
+                                        action="{{route('cliente.destroy',['cliente'=>$item->persona->id])}}">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-danger">Confirmar</button>
@@ -143,47 +130,8 @@
                         </div>
                     </div>
 
-                    <!-- Modal de ver la imagne-->
-                    <div class="modal fade" id="verModal-{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                 <div class="row mb-3">
-                                    <label for=""><span class="fw-bolder">Descripcion:</span> {{$item->descripcion}}</label>
-                                    <div class="row mb-3">
-                                        <label for=""><span class="fw-bolder">Fecha Vencimiento: </span>{{$item->fecha_vencimiento == '' ? 'No tiene' :  $item->fecha_vencimiento}}</label>
-                                    </div>
 
-                                    <div class="row mb-3">
-                                        <label><span class="fw-bolder">Stock: </span>{{$item->stock}}</label>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label  class="fw-bolder">Imagen:</label>
-                                        <div>
-                                            @if ($item->img_path != null)
-                                                <img src="{{Storage::url('public/productos/'. $item->img_path)}}" alt="{{$item->nombre}}" class="img-fluid img-thumbnail border boder-4 rounded">
-                                            @else
-                                                <img src="" alt="{{$item->nombre}}">
-                                            @endif
-                                        </div>
-                                    </div>
-                                 </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach --}}
+                    @endforeach
                 </tbody>
             </table>
         </div>

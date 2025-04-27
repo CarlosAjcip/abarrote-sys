@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClienteRequest;
 use App\Models\Documento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePersonaRequest;
+use App\Http\Requests\UpdateClienteRequest;
+use App\Models\Cliente;
 use App\Models\Persona;
 
 class ClienteController extends Controller
@@ -17,7 +20,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        return view('clientes.index');
+        $clientes = Cliente::with('persona.documento')->get();
+        
+        return view('clientes.index',compact('clientes'));
     }
 
     /**
@@ -37,7 +42,7 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePersonaRequest $request)
+    public function store(StoreClienteRequest $request)
     {
         try {
             //code...
@@ -52,6 +57,7 @@ class ClienteController extends Controller
             DB::rollBack();
         }
 
+        
         return redirect()->route('cliente.index')->with('success','Cliente registrado');
 
     }
@@ -73,9 +79,11 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Cliente $cliente)
     {
-        //
+        $cliente->load('persona.documento');
+        $documentos = Documento::all();
+        return view('clientes.edit', compact('cliente','documentos'));
     }
 
     /**
@@ -85,9 +93,20 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateClienteRequest $request, Cliente $cliente)
     {
-        //
+        try {
+            //code...
+            DB::beginTransaction();
+                Persona::where('id', $cliente->persona->id)
+                ->update($request->validated());
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+
+        return redirect()->route('cliente.index')->with('success','Cliente editado');
     }
 
     /**
@@ -98,6 +117,28 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $message = '';
+        $persona = Persona::find($id);
+
+        if ($persona->estado == 1) {
+            # code...
+            Persona::where('id',$persona->id)
+            ->update([
+                'estado' => 0
+            ]);
+
+            $message = 'Cliente Eliminado';
+        } else {
+            # code...
+            Persona::where('id',$persona->id)
+            ->update([
+                'estado' => 1
+            ]);
+
+            $message = 'Cliente Restaurado';
+        }
+        
+        return redirect()->route('cliente.index')->with('success', $message);
+   
     }
 }

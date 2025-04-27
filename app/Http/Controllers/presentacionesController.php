@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePresentacionesRequest;
 use App\Http\Requests\UpdatePresentacionesRequest;
 use App\Models\Caracteristica;
+use App\Models\Presentacion;
 use App\Models\Presentacione;
 
 class presentacionesController extends Controller
@@ -18,7 +19,7 @@ class presentacionesController extends Controller
      */
     public function index()
     {
-        $presentaciones = Presentacione::with('caracteristica')->latest()->get();
+        $presentaciones = Presentacion::with('caracteristica')->latest()->get();
         return view('presentaciones.index',['presentacione' => $presentaciones]);
     }
 
@@ -73,7 +74,7 @@ class presentacionesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Presentacione $presentaciones)
+    public function edit(Presentacion $presentaciones)
     {
         return view('presentaciones.edit',['presentaciones' => $presentaciones]);
     }
@@ -85,7 +86,7 @@ class presentacionesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePresentacionesRequest $request, Presentacione $presentaciones)
+    public function update(UpdatePresentacionesRequest $request, Presentacion $presentaciones)
     {
         //
         Caracteristica::where('id', $presentaciones->caracteristica->id)->update($request->validated());
@@ -101,7 +102,7 @@ class presentacionesController extends Controller
     public function destroy($id)
     {
         $message = '';
-        $presentaciones = Presentacione::find($id);
+        $presentaciones = Presentacion::find($id);
 
         if ($presentaciones->caracteristica->estado == 1) {
             # code...

@@ -5,6 +5,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\marcaController;
 use App\Http\Controllers\presentacionesController;
 use App\Http\Controllers\productoController;
+use App\Http\Controllers\ProveedoresController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -72,4 +73,10 @@ Route::resource('producto', productoController::class)->parameters([
 //modulo clientes
 Route::resource('cliente', ClienteController::class)->parameters([
     'cliente' => 'cliente'
+]);
+
+
+//modulo proveedores
+Route::resource('proveedores', ProveedoresController::class)->parameters([
+    'proveedores' => 'proveedores'
 ]);

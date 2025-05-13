@@ -9,6 +9,14 @@ class Compra extends Model
 {
     use HasFactory;
 
+     protected $fillable = [
+        'fecha_hora',
+        'impuesto',
+        'numero_comprobante',
+        'total',
+        'comprobantes_id',
+        'proveedore_id'
+    ];
     public function proveedore(){
         return $this->belongsTo(Proveedore::class);
     }
@@ -22,4 +30,5 @@ class Compra extends Model
         ->withTimestamps()
         ->withPivot('cantidad','precio_compra','precio_venta');
     }
+
 }

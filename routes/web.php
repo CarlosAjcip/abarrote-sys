@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\categoriaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CompraController;
+use App\Http\Controllers\ComprasController;
 use App\Http\Controllers\marcaController;
 use App\Http\Controllers\presentacionesController;
 use App\Http\Controllers\productoController;
@@ -79,4 +81,9 @@ Route::resource('cliente', ClienteController::class)->parameters([
 //modulo proveedores
 Route::resource('proveedores', ProveedoresController::class)->parameters([
     'proveedores' => 'proveedores'
+]);
+
+//modulo compra
+Route::resource('compras',  ComprasController::class)->parameters([
+    'compras' => 'compras'
 ]);

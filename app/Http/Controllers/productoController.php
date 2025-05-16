@@ -46,24 +46,22 @@ class productoController extends Controller
         // })->get();
 
         //y esta es otro forma
-        $marcas = Marca::join('caracteristicas as c', 'marcas.caracteristica_id', '=', 'c.id')
-        ->select('marcas.id as id', 'c.nombre as nombre')
-        ->where('c.estado',1)
-        ->get();
+         $marcas = Marca::join('caracteristicas as c', 'marcas.caracteristica_id', '=', 'c.id')
+            ->select('marcas.id as id', 'c.nombre as nombre')
+            ->where('c.estado', 1)
+            ->get();
 
-      
+        $presentaciones = Presentacion::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
+            ->select('presentaciones.id as id', 'c.nombre as nombre')
+            ->where('c.estado', 1)
+            ->get();
 
         $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
-        ->select('categorias.id as id', 'c.nombre as nombre')
-        ->where('c.estado',1)
-        ->get();
+            ->select('categorias.id as id', 'c.nombre as nombre')
+            ->where('c.estado', 1)
+            ->get();
 
-        $producto = Presentacion::join('caracteristicas as c', 'producto.caracteristica_id', '=', 'c.id')
-        ->select('producto.id as id', 'c.nombre as nombre')
-        ->where('c.estado',1)
-        ->get();
-
-        return view('producto.create', compact('marcas','producto','categorias'));
+        return view('producto.create', compact('marcas','presentaciones','categorias'));
     }
 
     /**

@@ -21,9 +21,9 @@ class Compra extends Model
         return $this->belongsTo(Proveedore::class);
     }
 
-    public function comprobante(){
-        return $this->belongsTo(Comprobante::class);
-    }
+   public function comprobante(){
+    return $this->belongsTo(Comprobante::class, 'comprobantes_id');
+}
 
     public function productos(){
         return $this->belongsToMany(Producto::class)

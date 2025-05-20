@@ -75,7 +75,10 @@
                             </td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                   <button type="submit" class="btn btn-success">ver</button>   
+                                    <form action="{{route('compras.show', ['compras'=>$item])}}" method="get">
+                                        <button type="submit" class="btn btn-success" >ver</button>   
+                                    </form>
+                                   
                                    <button type="button" class="btn btn-danger">Eliminar</button>   
                                    {{-- <button type="button" class="btn btn-success">Restaurar</button> --}}
                                    

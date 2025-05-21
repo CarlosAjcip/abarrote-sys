@@ -8,6 +8,7 @@ use App\Http\Controllers\marcaController;
 use App\Http\Controllers\presentacionesController;
 use App\Http\Controllers\productoController;
 use App\Http\Controllers\ProveedoresController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,4 +87,8 @@ Route::resource('proveedores', ProveedoresController::class)->parameters([
 //modulo compra
 Route::resource('compras',  ComprasController::class)->parameters([
     'compras' => 'compras'
+]);
+
+Route::resource('venta',  VentaController::class)->parameters([
+    'venta' => 'venta'
 ]);

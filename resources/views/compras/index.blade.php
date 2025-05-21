@@ -79,73 +79,44 @@
                                         <button type="submit" class="btn btn-success" >ver</button>   
                                     </form>
                                    
-                                   <button type="button" class="btn btn-danger">Eliminar</button>   
-                                   {{-- <button type="button" class="btn btn-success">Restaurar</button> --}}
-                                   
+                                   <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal-{{$item->id}}">Eliminar</button>   
+                                                                      
                                 </div>
                             </td>
                         </tr>
+
+
+                    <!-- Modal Eliminar-->
+                    <div class="modal fade" id="exampleModal-{{$item->id}}" tabindex="-1"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Mensaje de confirmacion</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    !¿Seguro que quieres eliminar el cliente?
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cerrar</button>
+                                    <form method="post"
+                                        action="{{route('compras.destroy',['compras'=>$item->id])}}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     @endforeach
-                    {{-- @foreach ($marcas as $marca)
-                        <tr>
-                            <td>{{$marca->caracteristica->nombre}}</td>
-                            <td>
-                                {{$marca->caracteristica->descripcion}}
-                            </td>
-                            <td>
-                                @if ($marca->caracteristica->estado == 1)
-                                    <span class="fw-bolder p-1 rounded bg-success text-white">Activo</span>
-                                @else
-                                <span class="fw-bolder p-1 rounded bg-danger text-white">Eliminado</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                   <form method="get" action="{{route('marca.edit',['marca'=>$marca])}}">
-                                    @csrf   
-                                    <button type="submit" class="btn btn-warning">Editar</button>   
-                                   </form>
-                                   @if ($marca->caracteristica->estado == 1)
-                                   <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal-{{$marca->id}}" class="btn btn-danger">Eliminar</button>   
-                                   @else
-                                   <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal-{{$marca->id}}" class="btn btn-success">Restaurar</button>
-                                   @endif
-                                    
-                                  
-                                </div>
-                            </td>
-                        </tr>
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal-{{$marca->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Mensaje de confirmacion</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            {{ $marca->caracteristica->estado == 1 
-                ? "!¿Seguro que quieres eliminar la marca" 
-                : "¿Quieres restaurar la marca?" 
-            }}
-            
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <form method="post" action="{{route('marca.destroy',['marca'=>$marca->id])}}">
-            @method('DELETE')
-            @csrf
-            <button type="submit" class="btn btn-danger">Confirmar</button>
-          </form>
-          
-        </div>
-      </div>
-    </div>
-  </div>
-
-                @endforeach --}}
                 </tbody>
             </table>
         </div>
